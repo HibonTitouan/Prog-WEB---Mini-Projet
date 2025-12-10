@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>France Travail – Indicateurs de l'assurance chômage</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        canvas { max-height: 320px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg ft-navbar shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="logo-france-travail.png" alt="France Travail" class="ft-logo me-2">
+            <span class="ft-brand-text">France Travail</span>
+            <span class="ft-app-subtitle d-none d-md-inline">Indicateurs de l'assurance chômage</span>
+        </a>
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <a href="/dashboard" class="btn btn-sm btn-outline-light">Vue principale</a>
+            <a href="indicateurs.html" class="btn btn-sm btn-outline-light active-nav">Indicateurs</a>
+            <a href="/logout" class="btn btn-sm btn-light ms-2">Déconnexion</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container-fluid py-3">
+
+    <!-- Filtres -->
+    <section class="row g-3 filters-row">
+        <div class="col-lg-6">
+            <div class="filter-card">
+                <h6>Période d'analyse</h6>
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <div class="filter-group">
+                            <label for="select-year" class="form-label">Années</label>
+                            <select id="select-year" class="form-select" multiple></select>
+                            <small class="text-muted small">Une ou plusieurs années, ou « Tout l'historique ».</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="filter-group">
+                            <label for="select-date" class="form-label">Mois</label>
+                            <select id="select-date" class="form-select" multiple></select>
+                            <small class="text-muted small">Un ou plusieurs mois, ou « Tout l'historique ».</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="filter-card">
+                <h6>Périmètre géographique</h6>
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <div class="filter-group">
+                            <label for="select-region" class="form-label">Régions</label>
+                            <select id="select-region" class="form-select" multiple></select>
+                            <small class="text-muted small">Une ou plusieurs régions, ou « France entière ».</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="filter-group">
+                            <label for="select-departement" class="form-label">Départements</label>
+                            <select id="select-departement" class="form-select" multiple></select>
+                            <small class="text-muted small">Filtrer ou affiner au niveau départemental.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 1 : Niveau de protection -->
+    <section>
+        <h2 class="section-title">Niveau de protection</h2>
+        <p class="section-subtitle">Montant moyen des droits versés aux allocataires sur la période sélectionnée.</p>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <h2>Dépense moyenne par allocataire</h2>
+                <p id="kpi-depense-moyenne" class="kpi-value">—</p>
+                <p class="kpi-subtext">(allocations mensuelles versées / nombre d'allocataires)</p>
+            </div>
+            <div class="kpi-card">
+                <h2>Allocation journalière moyenne</h2>
+                <p id="kpi-aj-moyenne" class="kpi-value">—</p>
+                <p class="kpi-subtext">Montant d'allocation versée par jour d'indemnisation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2 : Profil d'activité et d'indemnisation -->
+    <section>
+        <h2 class="section-title">Profil d'activité et d'indemnisation</h2>
+        <p class="section-subtitle">Répartition des allocataires selon leur situation sur le marché du travail.</p>
+
+        <div class="kpi-grid mb-2">
+            <div class="kpi-card">
+                <h2>Allocataires qui travaillent ET indemnisés</h2>
+                <p id="kpi-part-travail-ind" class="kpi-value">— %</p>
+            </div>
+            <div class="kpi-card">
+                <h2>Allocataires en formation (AREF + ASP)</h2>
+                <p id="kpi-part-formation" class="kpi-value">— %</p>
+            </div>
+            <div class="kpi-card">
+                <h2>Indemnisés sans activité</h2>
+                <p id="kpi-part-indem-sans-travail" class="kpi-value">— %</p>
+                <p class="kpi-subtext">Parmi les allocataires indemnisés.</p>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h2 class="chart-title">Profil d'indemnisation</h2>
+            <canvas id="chart-profil-indemnisation"></canvas>
+        </div>
+    </section>
+
+    <!-- Section 3 : Territoires -->
+    <section>
+        <h2 class="section-title">Territoires</h2>
+        <p class="section-subtitle">Régions et départements les plus concernés par l'indemnisation.</p>
+
+        <div class="kpi-grid mb-3">
+            <div class="kpi-card">
+                <h2>Région la plus aidée</h2>
+                <p id="kpi-region-plus-aidee" class="kpi-value">—</p>
+            </div>
+            <div class="kpi-card">
+                <h2>Département le plus aidé</h2>
+                <p id="kpi-dept-plus-aide" class="kpi-value">—</p>
+            </div>
+            <div class="kpi-card">
+                <h2>Département le plus coûteux</h2>
+                <p id="kpi-dept-plus-couteux" class="kpi-value">—</p>
+                <p id="texte-dept-plus-couteux" class="kpi-subtext"></p>
+            </div>
+        </div>
+
+        <div class="chart-card mb-3">
+            <h2 class="chart-title">Répartition des dépenses par département</h2>
+            <canvas id="pieDepenseDept"></canvas>
+        </div>
+    </section>
+
+    <!-- Section 4 : Flux du régime -->
+    <section class="mb-4">
+        <h2 class="section-title">Flux du régime</h2>
+        <p class="section-subtitle">Dynamique des ouvertures de droits et des fins de droits.</p>
+
+        <div class="kpi-grid mb-2">
+            <div class="kpi-card">
+                <h2>Ouvertures de droits (moyenne 12 mois)</h2>
+                <p id="kpi-od-moyennes" class="kpi-value">—</p>
+            </div>
+            <div class="kpi-card">
+                <h2>Fins de droits (moyenne 12 mois)</h2>
+                <p id="kpi-fdd-moyennes" class="kpi-value">—</p>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h2 class="chart-title">Ouvertures de droits vs fins de droits (évolution)</h2>
+            <canvas id="chart-od-fdd"></canvas>
+        </div>
+    </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="indicateurs.js"></script>
+</body>
+</html>

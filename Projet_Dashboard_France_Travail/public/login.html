@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion – France Travail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-wrapper">
+
+<nav class="navbar ft-navbar shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="logo-france-travail.png" alt="France Travail" class="ft-logo me-2">
+            <span class="ft-brand-text">France Travail</span>
+            <span class="ft-app-subtitle d-none d-md-inline">Espace tableau de bord</span>
+        </a>
+    </div>
+</nav>
+
+<main class="login-main">
+    <div class="login-card">
+        <h1 class="mb-1">Connexion</h1>
+        <p class="text-muted mb-4 small">
+            Utilisez vos identifiants ou les comptes de démonstration fournis par l'enseignant.
+        </p>
+
+        <form method="POST" action="/auth">
+            <div class="mb-3">
+                <label class="form-label" for="username">Identifiant</label>
+                <input type="text" id="username" name="username" class="form-control" required autocomplete="username">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" class="form-control" required autocomplete="current-password">
+            </div>
+
+            <button class="btn btn-ft-primary w-100 mt-2" type="submit">Se connecter</button>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>
